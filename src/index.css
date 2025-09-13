@@ -1,68 +1,69 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Refined Tusona-Inspired African Color Palette */
+/* Paste.app inspired color palette */
 :root {
-  /* Earth tones / base */
-  --earth-clay: #B1503F;
-  --earth-ochre: #D9A441;
-  --earth-soil: #5C3A21;
-  --sand: #E8D2A6;
+  /* Primary colors - clean blues and grays */
+  --paste-blue: #0066FF;
+  --paste-blue-light: #4D94FF;
+  --paste-blue-dark: #0052CC;
   
-  /* Water / river accents */
-  --river-emerald: #22C55E;
-  --river-aqua: #06B6D4;
-  --river-indigo: #3B82F6;
-  --river-violet: #8B5CF6;
+  /* Neutral grays */
+  --paste-gray-50: #F8FAFC;
+  --paste-gray-100: #F1F5F9;
+  --paste-gray-200: #E2E8F0;
+  --paste-gray-300: #CBD5E1;
+  --paste-gray-400: #94A3B8;
+  --paste-gray-500: #64748B;
+  --paste-gray-600: #475569;
+  --paste-gray-700: #334155;
+  --paste-gray-800: #1E293B;
+  --paste-gray-900: #0F172A;
   
-  /* Highlight / glow */
-  --highlight-white: #F7F7F7;
-  --highlight-amber: #FFC66D;
+  /* Accent colors */
+  --paste-emerald: #10B981;
+  --paste-emerald-light: #34D399;
+  --paste-purple: #8B5CF6;
+  --paste-purple-light: #A78BFA;
   
-  /* Orange glow for waveforms */
-  --orange-glow: #FF8C42;
-  --orange-light: #FFC66D;
+  /* Text colors */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-white: #FFFFFF;
 }
 
-/* River gradient text (Hero & Highlights) */
+/* Clean gradient text inspired by Paste.app */
 .river-gradient {
   background: linear-gradient(
     135deg,
-    var(--earth-clay) 0%,
-    var(--earth-ochre) 25%,
-    var(--river-emerald) 50%,
-    var(--river-aqua) 75%,
-    var(--river-indigo) 100%
+    var(--paste-blue) 0%,
+    var(--paste-emerald) 50%,
+    var(--paste-purple) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: riverFlow 3s ease-in-out infinite;
+  animation: subtleFlow 4s ease-in-out infinite;
 }
 
-@keyframes riverFlow {
+@keyframes subtleFlow {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 
-/* Glow text for magical/ancient cues */
+/* Subtle glow for headings */
 .glow-text {
-  text-shadow:
-    0 0 20px var(--river-emerald),
-    0 0 40px var(--river-aqua),
-    0 0 60px var(--river-violet);
-  animation: glowPulse 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+  animation: subtleGlow 3s ease-in-out infinite alternate;
 }
 
-@keyframes glowPulse {
+@keyframes subtleGlow {
   from { 
-    text-shadow: 
-      0 0 10px var(--river-emerald), 
-      0 0 20px var(--river-aqua); 
+    text-shadow: 0 0 10px rgba(0, 102, 255, 0.2); 
   }
   to { 
-    text-shadow: 
-      0 0 30px var(--river-emerald), 
-      0 0 60px var(--river-violet); 
+    text-shadow: 0 0 20px rgba(0, 102, 255, 0.4); 
   }
 }
 
@@ -70,12 +71,12 @@
 .dynamic-island {
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid var(--river-emerald);
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 30px var(--river-emerald),
-    inset 0 1px 0 var(--highlight-white);
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: 30px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -89,7 +90,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, var(--river-emerald), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.3), transparent);
   transition: left 0.6s ease;
 }
 
@@ -101,16 +102,52 @@
   border-radius: 20px;
   transform: scale(1.02);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.5),
-    0 0 40px var(--river-emerald),
-    inset 0 1px 0 var(--highlight-white);
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Genie effect for play button */
+/* NotchBox-style morphing animation */
+.dynamic-island {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dynamic-island:hover {
+  transform: scale(1.01);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(0, 102, 255, 0.1);
+}
+
+/* Genie morphing effect for expansion */
+@keyframes genieMorph {
+  0% {
+    border-radius: 30px;
+    transform: scale(1);
+  }
+  50% {
+    border-radius: 25px;
+    transform: scale(1.01);
+  }
+  100% {
+    border-radius: 20px;
+    transform: scale(1.02);
+  }
+}
+
+.dynamic-island.expanding {
+  animation: genieMorph 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Genie effect for play button - NotchBox style */
 .genie-button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, var(--paste-blue), var(--paste-blue-light));
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .genie-button::before {
@@ -120,7 +157,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   transition: left 0.6s ease;
 }
 
@@ -129,13 +166,37 @@
 }
 
 .genie-button:hover {
-  transform: scale(1.1) translateY(-2px);
+  transform: scale(1.05) translateY(-1px);
   box-shadow: 
-    0 8px 25px rgba(185, 80, 63, 0.4),
-    0 0 20px rgba(34, 197, 94, 0.3);
+    0 8px 25px rgba(0, 102, 255, 0.3),
+    0 0 20px rgba(0, 102, 255, 0.2);
 }
 
-/* Floating orbs with refined river colors */
+.genie-button:active {
+  transform: scale(0.98);
+}
+
+/* NotchBox-style ripple effect */
+.genie-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.genie-button:active::after {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Subtle floating orbs with Paste.app colors */
 .floating-orbs {
   position: absolute;
   inset: 0;
@@ -149,7 +210,7 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(3rem);
-  animation: tusonaFloat 8s ease-in-out infinite;
+  animation: subtleFloat 8s ease-in-out infinite;
 }
 
 .floating-orbs::before {
@@ -157,7 +218,7 @@
   left: 2.5rem;
   width: 18rem;
   height: 18rem;
-  background: rgba(34, 197, 94, 0.15); /* Emerald orb */
+  background: rgba(0, 102, 255, 0.08); /* Blue orb */
   animation-delay: 0s;
 }
 
@@ -166,28 +227,28 @@
   right: 2.5rem;
   width: 24rem;
   height: 24rem;
-  background: rgba(59, 130, 246, 0.12); /* Indigo orb */
+  background: rgba(16, 185, 129, 0.06); /* Emerald orb */
   animation-delay: 4s;
 }
 
-@keyframes tusonaFloat {
+@keyframes subtleFloat {
   0%, 100% { 
     transform: translateY(0px) scale(1) rotate(0deg); 
-    opacity: 0.7; 
+    opacity: 0.5; 
   }
   50% { 
     transform: translateY(-20px) scale(1.1) rotate(180deg); 
-    opacity: 0.9; 
+    opacity: 0.7; 
   }
 }
 
-/* Tusona-style Orange Glow Waveforms */
+/* Clean waveform bars inspired by Paste.app */
 .waveform-bar {
   width: 4px;
-  background: linear-gradient(to top, var(--orange-glow), var(--orange-light));
+  background: linear-gradient(to top, var(--paste-blue), var(--paste-blue-light));
   border-radius: 2px;
   position: relative;
-  transition: height 0.3s ease;
+  transition: height 0.2s ease;
   overflow: hidden;
 }
 
@@ -198,18 +259,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, transparent, rgba(255, 198, 109, 0.5));
+  background: linear-gradient(to top, transparent, rgba(0, 102, 255, 0.3));
   animation: waveformGlow 1.5s ease-in-out infinite;
 }
 
 @keyframes waveformGlow {
   0%, 100% { opacity: 0.3; transform: scaleY(1); }
-  50% { opacity: 0.8; transform: scaleY(1.3); }
+  50% { opacity: 0.7; transform: scaleY(1.2); }
 }
 
 @keyframes pulseWave {
   0%, 100% { transform: scaleY(1); opacity: 0.6; }
-  50% { transform: scaleY(1.4); opacity: 1; }
+  50% { transform: scaleY(1.3); opacity: 1; }
 }
 
 /* Enhanced scroll reveal animations */
@@ -225,19 +286,19 @@
 }
 
 .scroll-reveal.revealed:nth-child(odd) {
-  animation: tusonaColorPulse 2s ease-in-out;
+  animation: subtleColorPulse 2s ease-in-out;
 }
 
 .scroll-reveal.revealed:nth-child(even) {
-  animation: tusonaColorPulse 2s ease-in-out 0.5s;
+  animation: subtleColorPulse 2s ease-in-out 0.5s;
 }
 
-@keyframes tusonaColorPulse {
+@keyframes subtleColorPulse {
   0%, 100% { 
     filter: hue-rotate(0deg) saturate(1);
   }
   50% { 
-    filter: hue-rotate(15deg) saturate(1.2);
+    filter: hue-rotate(5deg) saturate(1.1);
   }
 }
 
@@ -257,39 +318,37 @@
 @keyframes bookGlow {
   0%, 100% { 
     box-shadow: 
-      0 10px 30px rgba(185, 80, 63, 0.3),
-      0 0 20px rgba(34, 197, 94, 0.2);
+      0 10px 30px rgba(0, 102, 255, 0.2),
+      0 0 20px rgba(0, 102, 255, 0.1);
   }
   50% { 
     box-shadow: 
-      0 15px 40px rgba(185, 80, 63, 0.5),
-      0 0 30px rgba(34, 197, 94, 0.4);
+      0 15px 40px rgba(0, 102, 255, 0.3),
+      0 0 30px rgba(0, 102, 255, 0.2);
   }
 }
 
-/* Woven band with Tusona colors */
+/* Clean band styling inspired by Paste.app */
 .woven-band {
   background: linear-gradient(45deg, 
-    rgba(185, 80, 63, 0.1) 0%,
-    rgba(217, 164, 65, 0.1) 25%,
-    rgba(34, 197, 94, 0.1) 50%,
-    rgba(6, 182, 212, 0.1) 75%,
-    rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid rgba(185, 80, 63, 0.2);
+    rgba(0, 102, 255, 0.05) 0%,
+    rgba(16, 185, 129, 0.05) 50%,
+    rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(0, 102, 255, 0.1);
 }
 
-/* Button styles with refined palette */
+/* Button styles with Paste.app aesthetic */
 .button-primary {
   background: linear-gradient(
     135deg,
-    var(--earth-ochre),
-    var(--river-emerald),
-    var(--river-aqua)
+    var(--paste-blue),
+    var(--paste-blue-light)
   );
-  color: var(--highlight-white);
+  color: var(--text-white);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .button-primary::before {
@@ -299,7 +358,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, var(--highlight-white), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.6s ease;
 }
 
@@ -308,42 +367,51 @@
 }
 
 .button-primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px var(--river-emerald);
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
 }
 
 .button-secondary {
-  border: 2px solid var(--river-emerald);
-  color: var(--river-emerald);
+  border: 1px solid var(--paste-gray-300);
+  color: var(--paste-gray-600);
   background: transparent;
   transition: all 0.3s ease;
 }
 
 .button-secondary:hover {
-  background: var(--river-emerald);
-  color: var(--highlight-white);
+  background: var(--paste-gray-100);
+  color: var(--paste-gray-800);
+  border-color: var(--paste-gray-400);
 }
 
 /* Section backgrounds */
 .section-dark {
   background: linear-gradient(
     180deg,
-    var(--earth-soil) 0%,
-    rgba(5, 5, 5, 0.6) 100%
+    var(--paste-gray-800) 0%,
+    var(--paste-gray-900) 100%
   );
 }
 
 .section-accent {
-  background: rgba(229, 198, 141, 0.1); /* soft sand overlay for warmth */
+  background: rgba(248, 250, 252, 0.5); /* soft light overlay */
 }
 
-/* Background with riverbed and earth tones */
+/* Clean background inspired by Paste.app */
 body {
   background: linear-gradient(135deg, 
-    var(--earth-soil) 0%, 
-    #2D3748 25%, 
-    #1A202C 50%, 
-    #2D3748 75%, 
-    var(--earth-soil) 100%);
+    var(--paste-gray-50) 0%, 
+    var(--paste-gray-100) 50%, 
+    var(--paste-gray-50) 100%);
   background-attachment: fixed;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Font family definitions */
+.font-aoboshi {
+  font-family: 'Aoboshi One', serif;
+}
+
+.font-inter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }

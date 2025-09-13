@@ -7,7 +7,7 @@ A beautiful, responsive microsite for your YA Neo-African Futuristic novel, buil
 - **Responsive Design**: Looks great on desktop, tablet, and mobile
 - **Smooth Animations**: Powered by Framer Motion with scroll-triggered effects
 - **Modern UI**: Clean, minimalist design with Tailwind CSS
-- **Interactive Elements**: 
+- **Interactive Elements**:
   - Mailing list signup (saves to localStorage)
   - Excerpt modal
   - Smooth scrolling navigation
@@ -17,16 +17,19 @@ A beautiful, responsive microsite for your YA Neo-African Futuristic novel, buil
 ## Quick Start
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Start development server**:
+
    ```bash
    npm run dev
    ```
 
 3. **Build for production**:
+
    ```bash
    npm run build
    ```
@@ -34,6 +37,7 @@ A beautiful, responsive microsite for your YA Neo-African Futuristic novel, buil
 ## Customization
 
 ### Book Information
+
 Edit the `BOOK` object in `src/BookMicrosite.jsx`:
 
 ```javascript
@@ -52,13 +56,16 @@ const BOOK = {
 ```
 
 ### Styling
+
 - The site uses Tailwind CSS for styling
 - Colors are defined using Tailwind's color palette
 - Main brand colors: emerald (green) and sky (blue)
 - Customize colors in the component or extend Tailwind config
 
 ### Content Sections
+
 The site includes these sections:
+
 - **Hero**: Title, subtitle, and call-to-action buttons
 - **About**: Story description and key themes
 - **Excerpt**: Book excerpt with modal for full text
@@ -68,17 +75,22 @@ The site includes these sections:
 - **Footer**: Copyright and links
 
 ### Adding Images
+
 1. Place your cover image in the `public` folder
 2. Update the `cover` property in the `BOOK` object
 3. Do the same for your author photo
 
 ### Mailing List
+
 Currently saves to localStorage for demo purposes. To connect to a real service:
+
 1. Replace the `handleMailSubmit` function
 2. Integrate with your preferred email service (Mailchimp, ConvertKit, etc.)
 
 ### Deployment
+
 The site can be deployed to any static hosting service:
+
 - **Vercel**: `npm run build` then deploy the `dist` folder
 - **Netlify**: Connect your GitHub repo or drag & drop the `dist` folder
 - **GitHub Pages**: Use the `gh-pages` package

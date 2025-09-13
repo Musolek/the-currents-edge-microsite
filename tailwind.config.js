@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         'aoboshi': ['Aoboshi One', 'cursive'],
+        'inter': ['Inter', 'sans-serif'],
       },
     },
   },

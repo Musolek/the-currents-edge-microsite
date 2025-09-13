@@ -74,6 +74,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
   const [navSolid, setNavSolid] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
+  const [audioElement, setAudioElement] = useState(null);
   
   // Audio tracks data
   const audioTracks = [
@@ -82,14 +83,27 @@ be rewritten—even if the cost was everything she thought she knew about home."
       title: 'Amara Preview',
       duration: '2:34',
       description: 'Experience Amara\'s world in her own voice',
-      audioUrl: 'https://docs.google.com/uc?export=download&id=141SpfNCtA0EwsomO6mIx_zXAIbx9p2d6'
+      audioUrl: 'https://drive.google.com/uc?export=download&id=141SpfNCtA0EwsomO6mIx_zXAIbx9p2d6',
+      waveform: [0.4, 0.8, 0.6, 0.9, 0.7, 0.5, 0.8, 0.6, 0.4, 0.9, 0.7, 0.5],
+      isLive: true
     },
     {
       id: 'river-whispers',
       title: 'River Whispers',
       duration: '3:12',
       description: 'The river speaks its ancient language',
-      audioUrl: null
+      audioUrl: null,
+      waveform: [0.3, 0.7, 0.4, 0.8, 0.6, 0.9, 0.5, 0.7, 0.3, 0.6, 0.8, 0.4],
+      isLive: false
+    },
+    {
+      id: 'dreaming-grove',
+      title: 'The Dreaming Grove',
+      duration: '4:12',
+      description: 'Where memories take root',
+      audioUrl: null,
+      waveform: [0.5, 0.3, 0.8, 0.4, 0.7, 0.6, 0.9, 0.5, 0.4, 0.8, 0.6, 0.3],
+      isLive: false
     }
   ];
 
@@ -98,6 +112,26 @@ be rewritten—even if the cost was everything she thought she knew about home."
     onScroll();
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Initialize audio element
+  useEffect(() => {
+    const audio = new Audio();
+    audio.addEventListener('ended', () => setIsPlaying(false));
+    audio.addEventListener('pause', () => setIsPlaying(false));
+    audio.addEventListener('play', () => setIsPlaying(true));
+    audio.addEventListener('error', (e) => {
+      console.log('Audio error:', e);
+      setIsPlaying(false);
+    });
+    setAudioElement(audio);
+    
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.src = '';
+      }
+    };
   }, []);
 
   function handleMailSubmit(e) {
@@ -112,18 +146,24 @@ be rewritten—even if the cost was everything she thought she knew about home."
     setTimeout(() => setSaved(false), 2500);
   }
 
-  function handlePlayPause() {
-    const track = audioTracks[currentTrack];
-    if (!track.audioUrl) return;
+  function handlePlayPause(track = null) {
+    if (!audioElement) return;
     
-    const audio = new Audio(track.audioUrl);
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
+    const targetTrack = track || audioTracks[currentTrack];
+    if (!targetTrack.audioUrl) return;
+    
+    // If switching tracks, update current track
+    if (track && track.id !== audioTracks[currentTrack].id) {
+      setCurrentTrack(audioTracks.findIndex(t => t.id === track.id));
+    }
+    
+    if (isPlaying && audioElement.src === targetTrack.audioUrl) {
+      audioElement.pause();
     } else {
-      audio.play().catch(console.error);
-      setIsPlaying(true);
-      audio.addEventListener('ended', () => setIsPlaying(false));
+      if (audioElement.src !== targetTrack.audioUrl) {
+        audioElement.src = targetTrack.audioUrl;
+      }
+      audioElement.play().catch(console.error);
     }
   }
 
@@ -141,33 +181,38 @@ be rewritten—even if the cost was everything she thought she knew about home."
   };
 
   return (
-    <div className="min-h-screen font-sans bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white" ref={ref}>
+    <div className="min-h-screen font-inter bg-gradient-to-b from-slate-50 via-gray-100 to-slate-50 text-slate-900" ref={ref}>
       {/* NAVBAR */}
-      <nav className={`fixed inset-x-0 top-4 z-50 transition-all ${navSolid ? 'backdrop-blur bg-slate-900/80 shadow-lg shadow-emerald-500/10' : ''}`}>
+      <nav className={`fixed inset-x-0 top-4 z-50 transition-all ${navSolid ? 'backdrop-blur bg-white/80 shadow-lg shadow-slate-200/50' : ''}`}>
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/30">CE</div>
-            <div className="text-sm font-medium text-white">{BOOK.title}</div>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">CE</div>
+            <div className="text-sm font-medium text-slate-800">{BOOK.title}</div>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => scrollToId('about')} className="text-sm text-gray-300 hover:text-emerald-400 transition-colors">About</button>
-            <button onClick={() => scrollToId('excerpt')} className="text-sm text-gray-300 hover:text-emerald-400 transition-colors">Excerpt</button>
-            <button onClick={() => scrollToId('buy')} className="text-sm text-gray-300 hover:text-emerald-400 transition-colors">Buy</button>
-            <a href={BOOK.buyLink} className="ml-2 inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white text-sm hover:from-emerald-700 hover:to-cyan-700 transition-all shadow-lg shadow-emerald-500/25">Buy <ShoppingCart size={14} /></a>
+            <button onClick={() => scrollToId('about')} className="text-sm text-slate-600 hover:text-blue-600 transition-colors">About</button>
+            <button onClick={() => scrollToId('excerpt')} className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Excerpt</button>
+            <button onClick={() => scrollToId('buy')} className="text-sm text-slate-600 hover:text-blue-600 transition-colors">Buy</button>
+            <a href={BOOK.buyLink} className="ml-2 inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/25">Buy <ShoppingCart size={14} /></a>
           </div>
         </div>
       </nav>
 
-      {/* FLOATING AUDIO PLAYER - MacBook Dynamic Island Style */}
+      {/* FLOATING AUDIO PLAYER - Lower Left Position */}
       <motion.div 
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
-        className="fixed top-6 right-6 z-40 hidden md:block"
+        className="fixed bottom-6 left-6 z-40"
       >
         <div 
-          className="dynamic-island cursor-pointer" 
-          style={{ width: isExpanded ? '400px' : '200px', height: isExpanded ? '320px' : '60px' }}
+          className={`dynamic-island cursor-pointer transition-all duration-500 ease-out ${isExpanded ? 'expanded' : ''}`}
+          style={{ 
+            width: isExpanded ? '400px' : '200px', 
+            height: isExpanded ? '320px' : '60px',
+            transform: isExpanded ? 'scale(1.02)' : 'scale(1)',
+            borderRadius: isExpanded ? '20px' : '30px'
+          }}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {!isExpanded ? (
@@ -178,68 +223,72 @@ be rewritten—even if the cost was everything she thought she knew about home."
                     e.stopPropagation();
                     handlePlayPause();
                   }}
-                  className="genie-button w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white text-sm relative overflow-hidden"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="genie-button w-8 h-8 rounded-full flex items-center justify-center text-white text-sm relative overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                   style={{
                     boxShadow: isPlaying ? 
-                      '0 0 20px rgba(255, 140, 66, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)' : 
-                      '0 0 10px rgba(255, 140, 66, 0.3)'
+                      '0 0 20px rgba(0, 102, 255, 0.6), 0 0 40px rgba(0, 102, 255, 0.3)' : 
+                      '0 0 10px rgba(0, 102, 255, 0.3)'
                   }}
                 >
-              {isPlaying && (
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                />
-              )}
-              <span className="relative z-10 text-sm">
-                {isPlaying ? '⏸️' : '▶️'}
-              </span>
-            </motion.button>
-            <div>
-              <div className="text-sm font-medium text-white">{audioTracks[currentTrack].title}</div>
-              <div className="text-xs text-orange-400">{audioTracks[currentTrack].duration}</div>
+                  {isPlaying && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                    />
+                  )}
+                  <span className="relative z-10 text-sm">
+                    {isPlaying ? '⏸️' : '▶️'}
+                  </span>
+                </motion.button>
+                <div>
+                  <div className="text-sm font-medium text-white">{audioTracks[currentTrack].title}</div>
+                  <div className="text-xs text-blue-300">{audioTracks[currentTrack].duration}</div>
+                </div>
+              </div>
+              <div className="text-blue-300 text-xs">🎧</div>
             </div>
-          </div>
-          <div className="text-orange-400 text-xs">🎧</div>
-        </div>
           ) : (
             <div className="p-6 h-full">
               <div className="text-center mb-4">
                 <h3 className="text-white font-bold text-lg glow-text">Audio Samples</h3>
-                <p className="text-orange-400 text-sm">Experience Amara's world</p>
+                <p className="text-blue-300 text-sm">Experience Amara's world</p>
               </div>
               
+              {/* Desktop Dynamic Island */}
               <div className="space-y-3 max-h-60 overflow-y-auto">
-                {audioTracks.map((track, index) => (
+                {audioTracks.map((sample) => (
                   <div
-                    key={track.id}
-                    className="woven-band p-3 rounded-lg cursor-pointer hover:bg-orange-500/10 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentTrack(index);
-                      handlePlayPause();
-                    }}
+                    key={sample.id}
+                    className="woven-band p-3 rounded-lg cursor-pointer hover:bg-blue-500/10 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handlePlayPause(sample); }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="text-white text-sm font-medium">{track.title}</div>
-                        <div className="text-gray-400 text-xs">{track.description}</div>
+                        <div className="text-white text-sm font-medium flex items-center gap-2">
+                          {sample.title}
+                          {sample.isLive && <span className="text-xs bg-blue-500 px-2 py-1 rounded-full">🎙️ LIVE</span>}
+                        </div>
+                        <div className="text-gray-300 text-xs">{sample.description}</div>
                       </div>
-                      <div className="text-orange-400 text-xs ml-2">{track.duration}</div>
+                      <div className="text-blue-300 text-xs ml-2">
+                        {sample.isLive ? '🎧' : sample.duration}
+                      </div>
                     </div>
-                    
+
+                    {/* Waveform */}
                     <div className="flex items-end space-x-1 mt-2">
-                      {Array.from({ length: 12 }, (_, i) => (
+                      {sample.waveform.map((height, i) => (
                         <div
                           key={i}
                           className="waveform-bar"
-                          style={{ 
-                            height: `${Math.random() * 30 + 5}px`,
-                            animation: currentTrack === index && isPlaying ? 
-                              `pulseWave 0.5s ease-in-out infinite ${i * 0.1}s` : 'none'
+                          style={{
+                            height: `${height * 30}px`,
+                            animation: audioTracks[currentTrack].id === sample.id && isPlaying
+                              ? `pulseWave 0.5s ease-in-out infinite ${i * 0.1}s`
+                              : 'none'
                           }}
                         />
                       ))}
@@ -268,7 +317,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               transition={{ delay: 0.2 }} 
-              className="mt-4 text-lg text-gray-300 max-w-xl scroll-reveal"
+              className="mt-4 text-lg text-slate-600 max-w-xl scroll-reveal"
             >
               {BOOK.subtitle}
             </motion.p>
@@ -287,27 +336,27 @@ be rewritten—even if the cost was everything she thought she knew about home."
               </button>
               <button 
                 onClick={() => scrollToId('signup')} 
-                className="px-4 py-3 rounded-lg border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all inline-flex items-center gap-2"
+                className="px-4 py-3 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 hover:border-slate-400 transition-all inline-flex items-center gap-2"
               >
                 <Mail size={14}/> Join the List
               </button>
             </div>
-            <motion.div className="mt-6 text-xs text-gray-400">
+            <motion.div className="mt-6 text-xs text-slate-500">
               <span className="inline-block mr-2">⭐️⭐️⭐️⭐️⭐️ Early reviews</span>
               <span>"A river that remembers—beautiful and fierce." — Advance Reader</span>
             </motion.div>
           </motion.div>
           <motion.div className="col-span-5 flex justify-center book-scroll-reveal" style={{ y: y2 }}>
-            <div className="w-60 md:w-72 lg:w-80 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-orange-500/20">
+            <div className="w-60 md:w-72 lg:w-80 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/50">
               {/* Replace with actual cover image */}
               {BOOK.cover ? (
                 <img src={BOOK.cover} alt="Book cover" className="aspect-[2/3] object-cover w-full" />
               ) : (
-                <div className="aspect-[2/3] bg-gradient-to-br from-orange-600/20 to-red-600/20 flex items-end p-6 relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10"></div>
+                <div className="aspect-[2/3] bg-gradient-to-br from-blue-50 to-slate-100 flex items-end p-6 relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-slate-200/20"></div>
                   <div className="relative z-10">
-                    <div className="text-sm text-orange-300 font-semibold">Cover mockup</div>
-                    <div className="text-xs text-gray-400 mt-1">Drop in your cover image</div>
+                    <div className="text-sm text-slate-600 font-semibold">Cover mockup</div>
+                    <div className="text-xs text-slate-500 mt-1">Drop in your cover image</div>
                   </div>
                 </div>
               )}
@@ -332,24 +381,24 @@ be rewritten—even if the cost was everything she thought she knew about home."
       <section id="about" className="py-20">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ show: { transition: { staggerChildren: 0.14 }}}}>
-            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-white glow-text scroll-reveal">About the story</motion.h2>
-            <motion.p variants={reveal} className="mt-4 text-gray-300 max-w-3xl scroll-reveal">
-              Set in a world where rivers hold memory and power flows through bloodlines, <em className="text-orange-400">The Current's Edge</em> follows Amara as she navigates the intersection of tradition and survival, discovering that some inheritances demand everything.
+            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-slate-800 glow-text scroll-reveal">About the story</motion.h2>
+            <motion.p variants={reveal} className="mt-4 text-slate-600 max-w-3xl scroll-reveal">
+              Set in a world where rivers hold memory and power flows through bloodlines, <em className="text-blue-600">The Current's Edge</em> follows Amara as she navigates the intersection of tradition and survival, discovering that some inheritances demand everything.
             </motion.p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: 'Inheritance', desc: 'Amara inherits more than land—she receives ancestral knowledge and the burden of choice.', color: 'orange' },
-                { title: 'Displacement', desc: 'When home becomes contested ground, every decision carries the risk of losing what matters most.', color: 'cyan' },
-                { title: 'Language', desc: 'The river speaks in frequencies older than words, teaching those who learn to listen.', color: 'blue' },
+                { title: 'Inheritance', desc: 'Amara inherits more than land—she receives ancestral knowledge and the burden of choice.', color: 'blue' },
+                { title: 'Displacement', desc: 'When home becomes contested ground, every decision carries the risk of losing what matters most.', color: 'emerald' },
+                { title: 'Language', desc: 'The river speaks in frequencies older than words, teaching those who learn to listen.', color: 'purple' },
               ].map((c, i) => (
                 <motion.div 
                   key={c.title} 
                   variants={reveal} 
-                  className="woven-band rounded-xl p-6 shadow-lg hover:shadow-orange-500/10 transition-all scroll-reveal"
+                  className="woven-band rounded-xl p-6 shadow-lg hover:shadow-blue-500/10 transition-all scroll-reveal bg-white/50 border border-slate-200/50"
                   whileHover={{ y: -5, scale: 1.02 }}
                 >
-                  <div className={`text-lg font-semibold text-${c.color}-400`}>{c.title}</div>
-                  <div className="mt-2 text-gray-300">{c.desc}</div>
+                  <div className={`text-lg font-semibold text-${c.color}-600`}>{c.title}</div>
+                  <div className="mt-2 text-slate-600">{c.desc}</div>
                 </motion.div>
               ))}
             </div>
@@ -358,13 +407,13 @@ be rewritten—even if the cost was everything she thought she knew about home."
       </section>
 
       {/* EXCERPT */}
-      <section id="excerpt" className="py-20 bg-slate-800/30">
+      <section id="excerpt" className="py-20 bg-slate-100/50">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} className="space-y-4">
-            <motion.h3 variants={reveal} className="text-2xl font-aoboshi text-white">An Excerpt</motion.h3>
-            <motion.div variants={reveal} className="prose max-w-none text-gray-300 whitespace-pre-line">{BOOK.excerpt}</motion.div>
-            <div className="mt-4">
-              <button onClick={() => setShowExcerpt(true)} className="px-4 py-2 rounded border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all">Read more</button>
+            <motion.h3 variants={reveal} className="text-2xl font-aoboshi text-slate-800 glow-text scroll-reveal">An Excerpt</motion.h3>
+            <motion.div variants={reveal} className="prose max-w-none text-slate-600 whitespace-pre-line scroll-reveal">{BOOK.excerpt}</motion.div>
+            <div className="mt-4 scroll-reveal">
+              <button onClick={() => setShowExcerpt(true)} className="px-4 py-2 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 hover:border-slate-400 transition-all">Read more</button>
             </div>
           </motion.div>
         </div>
@@ -373,16 +422,16 @@ be rewritten—even if the cost was everything she thought she knew about home."
       {/* REVIEWS / PULLQUOTES */}
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.h4 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className="text-xl font-aoboshi text-white">Early Praise</motion.h4>
+          <motion.h4 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className="text-xl font-aoboshi text-slate-800 glow-text scroll-reveal">Early Praise</motion.h4>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-6 grid md:grid-cols-3 gap-6">
             {[
               "A mesmerizing blend of magical realism and environmental urgency. The Current's Edge flows with the power of tradition and the necessity of change.",
               "Amara's journey through inheritance and identity resonates with profound truth. This book will stay with you like the sound of running water.",
               "A powerful meditation on land, legacy, and the languages we inherit. Essential reading for our time.",
             ].map((q, i) => (
-              <div key={i} className="bg-slate-800/50 border border-emerald-500/20 p-6 rounded-xl shadow-lg hover:shadow-emerald-500/10 transition-all">
-                <div className="italic text-gray-300">"{q}"</div>
-                <div className="mt-4 text-xs text-emerald-400">— Advance reader</div>
+              <div key={i} className="bg-white/70 border border-slate-200/50 p-6 rounded-xl shadow-lg hover:shadow-blue-500/10 transition-all scroll-reveal">
+                <div className="italic text-slate-600">"{q}"</div>
+                <div className="mt-4 text-xs text-blue-600">— Advance reader</div>
               </div>
             ))}
           </motion.div>
@@ -390,26 +439,26 @@ be rewritten—even if the cost was everything she thought she knew about home."
       </section>
 
       {/* BUY / SIGNUP */}
-      <section id="buy" className="py-20 bg-gradient-to-b from-slate-800/50 to-slate-900/50">
+      <section id="buy" className="py-20 bg-gradient-to-b from-slate-100/50 to-slate-200/50">
         <div className="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
-            <motion.h2 initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} className="text-3xl font-aoboshi text-white">Get a copy</motion.h2>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-3 text-gray-300">
+            <motion.h2 initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} className="text-3xl font-aoboshi text-slate-800 glow-text scroll-reveal">Get a copy</motion.h2>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="mt-3 text-slate-600 scroll-reveal">
               Available in paperback, ebook, and audiobook. Preorder opens soon — sign up to get updates and limited edition extras.
             </motion.p>
-            <div className="mt-6 flex gap-3">
-              <a href={BOOK.buyLink} className="px-5 py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold inline-flex items-center gap-2 hover:from-emerald-700 hover:to-cyan-700 transition-all shadow-lg shadow-emerald-500/25">Buy now <ShoppingCart size={14} /></a>
-              <button onClick={() => scrollToId('signup')} className="px-5 py-3 rounded-lg border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all">Join the list</button>
+            <div className="mt-6 flex gap-3 scroll-reveal">
+              <a href={BOOK.buyLink} className="px-5 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold inline-flex items-center gap-2 hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/25">Buy now <ShoppingCart size={14} /></a>
+              <button onClick={() => scrollToId('signup')} className="px-5 py-3 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 hover:border-slate-400 transition-all">Join the list</button>
             </div>
           </div>
           <div>
-            <motion.form onSubmit={handleMailSubmit} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} className="bg-slate-800/50 border border-emerald-500/20 p-6 rounded-xl shadow-lg">
-              <div className="text-sm font-medium text-white">Join the mailing list</div>
+            <motion.form onSubmit={handleMailSubmit} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} className="bg-white/70 border border-slate-200/50 p-6 rounded-xl shadow-lg">
+              <div className="text-sm font-medium text-slate-800">Join the mailing list</div>
               <div className="mt-3 flex gap-2">
-                <input value={mail} onChange={e => setMail(e.target.value)} placeholder="you@domain.com" className="flex-1 border border-emerald-500/30 rounded px-3 py-2 bg-slate-700 text-white placeholder-gray-400 focus:border-emerald-400 focus:outline-none" />
-                <button type="submit" className="px-3 py-2 rounded bg-gradient-to-r from-emerald-600 to-cyan-600 text-white hover:from-emerald-700 hover:to-cyan-700 transition-all">Subscribe</button>
+                <input value={mail} onChange={e => setMail(e.target.value)} placeholder="you@domain.com" className="flex-1 border border-slate-300 rounded px-3 py-2 bg-white text-slate-800 placeholder-slate-400 focus:border-blue-400 focus:outline-none" />
+                <button type="submit" className="px-3 py-2 rounded bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all">Subscribe</button>
               </div>
-              {saved && <div className="mt-3 text-sm text-emerald-400">Thanks — you're on the list.</div>}
+              {saved && <div className="mt-3 text-sm text-blue-600">Thanks — you're on the list.</div>}
             </motion.form>
           </div>
         </div>
@@ -420,29 +469,29 @@ be rewritten—even if the cost was everything she thought she knew about home."
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-6 items-center">
           <div className="col-span-1">
             {BOOK.author.photo ? (
-              <img src={BOOK.author.photo} alt={BOOK.author.name} className="w-40 h-40 rounded-full object-cover border-2 border-emerald-500/30" />
+              <img src={BOOK.author.photo} alt={BOOK.author.name} className="w-40 h-40 rounded-full object-cover border-2 border-blue-500/30" />
             ) : (
-              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-emerald-600/20 to-cyan-600/20 border-2 border-emerald-500/30 flex items-center justify-center text-4xl text-emerald-400">📚</div>
+              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-100/50 to-slate-200/50 border-2 border-blue-500/30 flex items-center justify-center text-4xl text-blue-600">📚</div>
             )}
           </div>
           <div className="col-span-2">
-            <h5 className="text-xl font-aoboshi text-white">{BOOK.author.name}</h5>
-            <p className="mt-2 text-gray-300">{BOOK.author.bio}</p>
+            <h5 className="text-xl font-aoboshi text-slate-800">{BOOK.author.name}</h5>
+            <p className="mt-2 text-slate-600">{BOOK.author.bio}</p>
             <div className="mt-4 flex gap-3">
-              <a className="px-4 py-2 rounded border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all cursor-pointer">Contact</a>
-              <a className="px-4 py-2 rounded border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all cursor-pointer">Events</a>
+              <a className="px-4 py-2 rounded border border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:border-blue-400 transition-all cursor-pointer">Contact</a>
+              <a className="px-4 py-2 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 hover:border-slate-400 transition-all cursor-pointer">Events</a>
             </div>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 bg-slate-900 border-t border-emerald-500/20">
-        <div className="max-w-6xl mx-auto px-6 text-sm text-gray-400 flex justify-between items-center">
+      <footer className="py-8 bg-slate-800 border-t border-slate-200/20">
+        <div className="max-w-6xl mx-auto px-6 text-sm text-slate-400 flex justify-between items-center">
           <div>© {new Date().getFullYear()} {BOOK.author.name}</div>
           <div className="flex gap-4">
-            <a className="hover:text-emerald-400 transition-colors cursor-pointer">Privacy</a>
-            <a className="hover:text-emerald-400 transition-colors cursor-pointer">Terms</a>
+            <a className="hover:text-blue-400 transition-colors cursor-pointer">Privacy</a>
+            <a className="hover:text-blue-400 transition-colors cursor-pointer">Terms</a>
           </div>
         </div>
       </footer>
@@ -450,18 +499,18 @@ be rewritten—even if the cost was everything she thought she knew about home."
       {/* Excerpt modal (client-side) */}
       {showExcerpt && (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/60 p-6">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-3xl w-full bg-slate-800 border border-emerald-500/20 rounded-xl p-6 shadow-2xl">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-3xl w-full bg-white border border-slate-200/50 rounded-xl p-6 shadow-2xl">
             <div className="flex items-start justify-between">
-              <h4 className="text-lg font-aoboshi text-white">Excerpt — {BOOK.title}</h4>
-              <button onClick={() => setShowExcerpt(false)} className="text-gray-400 hover:text-white transition-colors">Close</button>
+              <h4 className="text-lg font-aoboshi text-slate-800">Excerpt — {BOOK.title}</h4>
+              <button onClick={() => setShowExcerpt(false)} className="text-slate-400 hover:text-slate-600 transition-colors">Close</button>
             </div>
-            <div className="mt-4 prose whitespace-pre-line text-gray-300">
+            <div className="mt-4 prose whitespace-pre-line text-slate-600">
               <p>{BOOK.excerpt}</p>
               <p>— continued —</p>
-              <p className="mt-4 text-gray-500 text-sm">(This is a placeholder excerpt. Replace with your full excerpt or integrate your CMS/MDX.)</p>
+              <p className="mt-4 text-slate-500 text-sm">(This is a placeholder excerpt. Replace with your full excerpt or integrate your CMS/MDX.)</p>
             </div>
             <div className="mt-6 flex justify-end">
-              <a href={BOOK.buyLink} className="px-4 py-2 rounded bg-gradient-to-r from-emerald-600 to-cyan-600 text-white hover:from-emerald-700 hover:to-cyan-700 transition-all">Buy the Book</a>
+              <a href={BOOK.buyLink} className="px-4 py-2 rounded bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all">Buy the Book</a>
             </div>
           </motion.div>
         </div>
