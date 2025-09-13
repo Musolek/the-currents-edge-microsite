@@ -1,1 +1,313 @@
 @import "tailwindcss";
+
+/* Tusona-Inspired African Color Palette */
+:root {
+  /* Earth tones - natural materials */
+  --clay-red: #B1503F;
+  --warm-ochre: #D9A441;
+  --deep-soil: #5C3A21;
+  --soft-sand: #E8D2A6;
+  
+  /* River & sky accents - mystical elements */
+  --emerald-river: #22C55E;
+  --aqua-flow: #06B6D4;
+  --indigo-depth: #3B82F6;
+  --violet-spirit: #8B5CF6;
+  
+  /* Tusona contrast colors */
+  --tusona-white: #F8FAFC;
+  --riverbed-dark: #1E293B;
+}
+
+/* Tusona-inspired gradient text */
+.tusona-gradient {
+  background: linear-gradient(
+    135deg, 
+    var(--clay-red) 0%, 
+    var(--warm-ochre) 25%, 
+    var(--emerald-river) 50%, 
+    var(--indigo-depth) 75%, 
+    var(--violet-spirit) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: tusonaFlow 4s ease-in-out infinite;
+}
+
+@keyframes tusonaFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Enhanced glow effects with earth tones */
+.tusona-glow {
+  text-shadow: 
+    0 0 20px rgba(185, 80, 63, 0.6),
+    0 0 40px rgba(34, 197, 94, 0.4),
+    0 0 60px rgba(59, 130, 246, 0.3);
+  animation: tusonaGlowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes tusonaGlowPulse {
+  from { 
+    text-shadow: 
+      0 0 15px rgba(185, 80, 63, 0.4),
+      0 0 30px rgba(34, 197, 94, 0.3),
+      0 0 45px rgba(59, 130, 246, 0.2);
+  }
+  to { 
+    text-shadow: 
+      0 0 25px rgba(185, 80, 63, 0.8),
+      0 0 50px rgba(34, 197, 94, 0.6),
+      0 0 75px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* MacBook-style Dynamic Island with NotchBox effects */
+.dynamic-island {
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(185, 80, 63, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(185, 80, 63, 0.2),
+    inset 0 1px 0 rgba(248, 250, 252, 0.1);
+  border-radius: 30px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dynamic-island::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(185, 80, 63, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.dynamic-island:hover::before {
+  left: 100%;
+}
+
+.dynamic-island.expanded {
+  border-radius: 20px;
+  transform: scale(1.02);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(185, 80, 63, 0.3),
+    inset 0 1px 0 rgba(248, 250, 252, 0.2);
+}
+
+/* Genie effect for play button */
+.genie-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.genie-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.genie-button:hover::before {
+  left: 100%;
+}
+
+.genie-button:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(185, 80, 63, 0.4),
+    0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+/* Tusona-inspired floating orbs */
+.floating-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-orbs::before,
+.floating-orbs::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3rem);
+  animation: tusonaFloat 8s ease-in-out infinite;
+}
+
+.floating-orbs::before {
+  top: 5rem;
+  left: 2.5rem;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(34, 197, 94, 0.15);
+  animation-delay: 0s;
+}
+
+.floating-orbs::after {
+  bottom: 5rem;
+  right: 2.5rem;
+  width: 24rem;
+  height: 24rem;
+  background: rgba(217, 164, 65, 0.15);
+  animation-delay: 4s;
+}
+
+@keyframes tusonaFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1) rotate(0deg); 
+    opacity: 0.7; 
+  }
+  50% { 
+    transform: translateY(-20px) scale(1.1) rotate(180deg); 
+    opacity: 0.9; 
+  }
+}
+
+/* Tusona-inspired waveform patterns */
+.waveform-bar {
+  width: 4px;
+  background: linear-gradient(to top, var(--clay-red), var(--emerald-river), var(--indigo-depth));
+  border-radius: 2px;
+  transition: height 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.waveform-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, transparent, rgba(248, 250, 252, 0.4));
+  animation: tusonaWaveGlow 2s ease-in-out infinite;
+}
+
+@keyframes tusonaWaveGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Enhanced scroll reveal animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal.revealed:nth-child(odd) {
+  animation: tusonaColorPulse 2s ease-in-out;
+}
+
+.scroll-reveal.revealed:nth-child(even) {
+  animation: tusonaColorPulse 2s ease-in-out 0.5s;
+}
+
+@keyframes tusonaColorPulse {
+  0%, 100% { 
+    filter: hue-rotate(0deg) saturate(1);
+  }
+  50% { 
+    filter: hue-rotate(15deg) saturate(1.2);
+  }
+}
+
+/* Book scroll animation */
+.book-scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px) rotateX(15deg);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book-scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+  animation: bookGlow 3s ease-in-out infinite;
+}
+
+@keyframes bookGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 10px 30px rgba(185, 80, 63, 0.3),
+      0 0 20px rgba(34, 197, 94, 0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 15px 40px rgba(185, 80, 63, 0.5),
+      0 0 30px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* Woven band with Tusona colors */
+.woven-band {
+  background: linear-gradient(45deg, 
+    rgba(185, 80, 63, 0.1) 0%,
+    rgba(217, 164, 65, 0.1) 25%,
+    rgba(34, 197, 94, 0.1) 50%,
+    rgba(6, 182, 212, 0.1) 75%,
+    rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(185, 80, 63, 0.2);
+}
+
+/* Enhanced button hover effects */
+.tusona-button {
+  background: linear-gradient(135deg, var(--clay-red), var(--warm-ochre));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.tusona-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.tusona-button:hover::before {
+  left: 100%;
+}
+
+.tusona-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 25px rgba(185, 80, 63, 0.4),
+    0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+/* Background with riverbed and earth tones */
+body {
+  background: linear-gradient(135deg, 
+    var(--riverbed-dark) 0%, 
+    #2D3748 25%, 
+    #1A202C 50%, 
+    #2D3748 75%, 
+    var(--riverbed-dark) 100%);
+  background-attachment: fixed;
+}

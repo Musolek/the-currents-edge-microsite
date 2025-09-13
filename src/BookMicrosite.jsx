@@ -45,11 +45,32 @@ be rewritten—even if the cost was everything she thought she knew about home."
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 600], [0, -60]);
   const y2 = useTransform(scrollY, [0, 800], [0, -120]);
+  
+  // Enhanced scroll reveal effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const revealElements = document.querySelectorAll('.scroll-reveal, .book-scroll-reveal');
+      revealElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('revealed');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial call
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // --- local state ---
   const [showExcerpt, setShowExcerpt] = useState(false);
   const [mail, setMail] = useState('');
   const [saved, setSaved] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [navSolid, setNavSolid] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
@@ -137,26 +158,35 @@ be rewritten—even if the cost was everything she thought she knew about home."
         </div>
       </nav>
 
-      {/* FLOATING AUDIO PLAYER */}
+      {/* FLOATING AUDIO PLAYER - MacBook Dynamic Island Style */}
       <motion.div 
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1 }}
-        className="fixed top-20 right-6 z-40 hidden md:block"
+        className="fixed top-6 right-6 z-40 hidden md:block"
       >
-        <div className="bg-slate-900/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20">
-          <div className="flex items-center gap-3">
-            <motion.button
-              onClick={handlePlayPause}
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white relative overflow-hidden"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                boxShadow: isPlaying ? 
-                  '0 0 20px rgba(34, 197, 94, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)' : 
-                  '0 0 10px rgba(34, 197, 94, 0.3)'
-              }}
-            >
+        <div 
+          className="dynamic-island cursor-pointer" 
+          style={{ width: isExpanded ? '400px' : '200px', height: isExpanded ? '320px' : '60px' }}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {!isExpanded ? (
+            <div className="h-full flex items-center justify-between px-4">
+              <div className="flex items-center space-x-3">
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlayPause();
+                  }}
+                  className="genie-button w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white text-sm relative overflow-hidden"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    boxShadow: isPlaying ? 
+                      '0 0 20px rgba(185, 80, 63, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)' : 
+                      '0 0 10px rgba(185, 80, 63, 0.3)'
+                  }}
+                >
               {isPlaying && (
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
@@ -170,9 +200,55 @@ be rewritten—even if the cost was everything she thought she knew about home."
             </motion.button>
             <div>
               <div className="text-sm font-medium text-white">{audioTracks[currentTrack].title}</div>
-              <div className="text-xs text-emerald-400">{audioTracks[currentTrack].duration}</div>
+              <div className="text-xs text-orange-400">{audioTracks[currentTrack].duration}</div>
             </div>
           </div>
+          <div className="text-orange-400 text-xs">🎧</div>
+        </div>
+          ) : (
+            <div className="p-6 h-full">
+              <div className="text-center mb-4">
+                <h3 className="text-white font-bold text-lg tusona-glow">Audio Samples</h3>
+                <p className="text-orange-400 text-sm">Experience Amara's world</p>
+              </div>
+              
+              <div className="space-y-3 max-h-60 overflow-y-auto">
+                {audioTracks.map((track, index) => (
+                  <div
+                    key={track.id}
+                    className="woven-band p-3 rounded-lg cursor-pointer hover:bg-orange-500/10 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentTrack(index);
+                      handlePlayPause();
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="text-white text-sm font-medium">{track.title}</div>
+                        <div className="text-gray-400 text-xs">{track.description}</div>
+                      </div>
+                      <div className="text-orange-400 text-xs ml-2">{track.duration}</div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-1 mt-2">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div
+                          key={i}
+                          className="waveform-bar"
+                          style={{ 
+                            height: `${Math.random() * 20 + 5}px`,
+                            animation: currentTrack === index && isPlaying ? 
+                              `pulse 0.5s ease infinite ${i * 0.1}s` : 'none'
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </motion.div>
 
@@ -184,7 +260,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
               initial={{ opacity: 0, y: -18 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.05 }} 
-              className="text-5xl md:text-6xl leading-tight font-aoboshi tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent"
+              className="text-5xl md:text-6xl leading-tight font-aoboshi tracking-tight tusona-gradient tusona-glow scroll-reveal"
             >
               {BOOK.title}
             </motion.h1>
@@ -192,20 +268,20 @@ be rewritten—even if the cost was everything she thought she knew about home."
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               transition={{ delay: 0.2 }} 
-              className="mt-4 text-lg text-gray-300 max-w-xl"
+              className="mt-4 text-lg text-gray-300 max-w-xl scroll-reveal"
             >
               {BOOK.subtitle}
             </motion.p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3 scroll-reveal">
               <button 
                 onClick={() => scrollToId('buy')} 
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-semibold shadow-lg shadow-emerald-500/25 hover:from-emerald-700 hover:to-cyan-700 hover:translate-y-[-2px] transition-all duration-300"
+                className="tusona-button inline-flex items-center gap-2 px-5 py-3 rounded-lg text-white font-semibold"
               >
                 Buy the Book <ArrowRight size={16} />
               </button>
               <button 
                 onClick={() => setShowExcerpt(true)} 
-                className="px-4 py-3 rounded-lg border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all"
+                className="px-4 py-3 rounded-lg border border-orange-500/30 text-orange-400 hover:bg-orange-500/10 hover:border-orange-400 transition-all"
               >
                 Read an Excerpt
               </button>
@@ -221,16 +297,16 @@ be rewritten—even if the cost was everything she thought she knew about home."
               <span>"A river that remembers—beautiful and fierce." — Advance Reader</span>
             </motion.div>
           </motion.div>
-          <motion.div className="col-span-5 flex justify-center" style={{ y: y2 }}>
-            <div className="w-60 md:w-72 lg:w-80 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/20">
+          <motion.div className="col-span-5 flex justify-center book-scroll-reveal" style={{ y: y2 }}>
+            <div className="w-60 md:w-72 lg:w-80 rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-orange-500/20">
               {/* Replace with actual cover image */}
               {BOOK.cover ? (
                 <img src={BOOK.cover} alt="Book cover" className="aspect-[2/3] object-cover w-full" />
               ) : (
-                <div className="aspect-[2/3] bg-gradient-to-br from-emerald-600/20 to-cyan-600/20 flex items-end p-6 relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10"></div>
+                <div className="aspect-[2/3] bg-gradient-to-br from-orange-600/20 to-red-600/20 flex items-end p-6 relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10"></div>
                   <div className="relative z-10">
-                    <div className="text-sm text-emerald-300 font-semibold">Cover mockup</div>
+                    <div className="text-sm text-orange-300 font-semibold">Cover mockup</div>
                     <div className="text-xs text-gray-400 mt-1">Drop in your cover image</div>
                   </div>
                 </div>
@@ -256,20 +332,20 @@ be rewritten—even if the cost was everything she thought she knew about home."
       <section id="about" className="py-20">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ show: { transition: { staggerChildren: 0.14 }}}}>
-            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-white">About the story</motion.h2>
-            <motion.p variants={reveal} className="mt-4 text-gray-300 max-w-3xl">
-              Set in a world where rivers hold memory and power flows through bloodlines, <em className="text-emerald-400">The Current's Edge</em> follows Amara as she navigates the intersection of tradition and survival, discovering that some inheritances demand everything.
+            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-white tusona-glow scroll-reveal">About the story</motion.h2>
+            <motion.p variants={reveal} className="mt-4 text-gray-300 max-w-3xl scroll-reveal">
+              Set in a world where rivers hold memory and power flows through bloodlines, <em className="text-orange-400">The Current's Edge</em> follows Amara as she navigates the intersection of tradition and survival, discovering that some inheritances demand everything.
             </motion.p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: 'Inheritance', desc: 'Amara inherits more than land—she receives ancestral knowledge and the burden of choice.', color: 'emerald' },
+                { title: 'Inheritance', desc: 'Amara inherits more than land—she receives ancestral knowledge and the burden of choice.', color: 'orange' },
                 { title: 'Displacement', desc: 'When home becomes contested ground, every decision carries the risk of losing what matters most.', color: 'cyan' },
                 { title: 'Language', desc: 'The river speaks in frequencies older than words, teaching those who learn to listen.', color: 'blue' },
               ].map((c, i) => (
                 <motion.div 
                   key={c.title} 
                   variants={reveal} 
-                  className={`bg-slate-800/50 border border-${c.color}-500/20 rounded-xl p-6 shadow-lg hover:shadow-${c.color}-500/10 transition-all`}
+                  className="woven-band rounded-xl p-6 shadow-lg hover:shadow-orange-500/10 transition-all scroll-reveal"
                   whileHover={{ y: -5, scale: 1.02 }}
                 >
                   <div className={`text-lg font-semibold text-${c.color}-400`}>{c.title}</div>
