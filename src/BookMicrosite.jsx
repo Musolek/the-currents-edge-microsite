@@ -178,13 +178,13 @@ be rewritten—even if the cost was everything she thought she knew about home."
                     e.stopPropagation();
                     handlePlayPause();
                   }}
-                  className="genie-button w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white text-sm relative overflow-hidden"
+                  className="genie-button w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white text-sm relative overflow-hidden"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   style={{
                     boxShadow: isPlaying ? 
-                      '0 0 20px rgba(185, 80, 63, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)' : 
-                      '0 0 10px rgba(185, 80, 63, 0.3)'
+                      '0 0 20px rgba(255, 140, 66, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)' : 
+                      '0 0 10px rgba(255, 140, 66, 0.3)'
                   }}
                 >
               {isPlaying && (
@@ -208,7 +208,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
           ) : (
             <div className="p-6 h-full">
               <div className="text-center mb-4">
-                <h3 className="text-white font-bold text-lg tusona-glow">Audio Samples</h3>
+                <h3 className="text-white font-bold text-lg glow-text">Audio Samples</h3>
                 <p className="text-orange-400 text-sm">Experience Amara's world</p>
               </div>
               
@@ -231,15 +231,15 @@ be rewritten—even if the cost was everything she thought she knew about home."
                       <div className="text-orange-400 text-xs ml-2">{track.duration}</div>
                     </div>
                     
-                    <div className="flex items-center space-x-1 mt-2">
+                    <div className="flex items-end space-x-1 mt-2">
                       {Array.from({ length: 12 }, (_, i) => (
                         <div
                           key={i}
                           className="waveform-bar"
                           style={{ 
-                            height: `${Math.random() * 20 + 5}px`,
+                            height: `${Math.random() * 30 + 5}px`,
                             animation: currentTrack === index && isPlaying ? 
-                              `pulse 0.5s ease infinite ${i * 0.1}s` : 'none'
+                              `pulseWave 0.5s ease-in-out infinite ${i * 0.1}s` : 'none'
                           }}
                         />
                       ))}
@@ -260,7 +260,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
               initial={{ opacity: 0, y: -18 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.05 }} 
-              className="text-5xl md:text-6xl leading-tight font-aoboshi tracking-tight tusona-gradient tusona-glow scroll-reveal"
+              className="text-5xl md:text-6xl leading-tight font-aoboshi tracking-tight river-gradient glow-text scroll-reveal"
             >
               {BOOK.title}
             </motion.h1>
@@ -275,13 +275,13 @@ be rewritten—even if the cost was everything she thought she knew about home."
             <div className="mt-8 flex flex-wrap gap-3 scroll-reveal">
               <button 
                 onClick={() => scrollToId('buy')} 
-                className="tusona-button inline-flex items-center gap-2 px-5 py-3 rounded-lg text-white font-semibold"
+                className="button-primary inline-flex items-center gap-2 px-5 py-3 rounded-lg font-semibold"
               >
                 Buy the Book <ArrowRight size={16} />
               </button>
               <button 
                 onClick={() => setShowExcerpt(true)} 
-                className="px-4 py-3 rounded-lg border border-orange-500/30 text-orange-400 hover:bg-orange-500/10 hover:border-orange-400 transition-all"
+                className="button-secondary px-4 py-3 rounded-lg transition-all"
               >
                 Read an Excerpt
               </button>
@@ -332,7 +332,7 @@ be rewritten—even if the cost was everything she thought she knew about home."
       <section id="about" className="py-20">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={{ show: { transition: { staggerChildren: 0.14 }}}}>
-            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-white tusona-glow scroll-reveal">About the story</motion.h2>
+            <motion.h2 variants={reveal} className="text-3xl font-aoboshi text-white glow-text scroll-reveal">About the story</motion.h2>
             <motion.p variants={reveal} className="mt-4 text-gray-300 max-w-3xl scroll-reveal">
               Set in a world where rivers hold memory and power flows through bloodlines, <em className="text-orange-400">The Current's Edge</em> follows Amara as she navigates the intersection of tradition and survival, discovering that some inheritances demand everything.
             </motion.p>
