@@ -154,8 +154,12 @@ class MLService {
     ) -> Double {
         
         // 1. Feature distance (lower = better match)
-        let valenceDiff = track.features.valence - targetValence
-        let arousalDiff = track.features.energy - targetArousal
+        // Normalize audio features from 0.0-1.0 to -1.0-1.0 to match mood coordinates
+        let normalizedTrackValence = track.features.normalizedValence
+        let normalizedTrackEnergy = track.features.normalizedEnergy
+        
+        let valenceDiff = normalizedTrackValence - targetValence
+        let arousalDiff = normalizedTrackEnergy - targetArousal
         let featureDistance = sqrt(valenceDiff * valenceDiff + arousalDiff * arousalDiff)
         let featureScore = 1.0 - (featureDistance / sqrt(2.0)) // Normalize to [0, 1]
         
@@ -190,14 +194,17 @@ class MLService {
     /// Applies gentle nudge toward positive valence (if settings enabled)
     private func applyMoodNudge(tracks: [Track], currentValence: Double) -> [Track] {
         // Only nudge if user is in low-valence state and has enabled nudges
+        // currentValence is in -1.0 to 1.0 range (from mood coordinates)
         guard currentValence < 0.3 else {
             return tracks
         }
         
         // Identify tracks with slightly higher valence (within 0.2 range)
-        let nudgeTracks = tracks.filter {
-            $0.features.valence > currentValence &&
-            $0.features.valence < currentValence + 0.25
+        // Normalize track valence from 0.0-1.0 to -1.0-1.0 for comparison
+        let nudgeTracks = tracks.filter { track in
+            let normalizedValence = track.features.normalizedValence
+            return normalizedValence > currentValence &&
+                   normalizedValence < currentValence + 0.25
         }
         
         guard !nudgeTracks.isEmpty else {
@@ -281,7 +288,9 @@ class MLService {
         guard enabled else { return tracks }
         
         // Only filter if user is in vulnerable state (low valence + low arousal)
-        let isVulnerable = userState.valence < 0.4 && userState.arousal < 0.4
+        // userState is in -1.0 to 1.0 range (from mood coordinates)
+        // Low valence = negative emotions (< 0.0), Low arousal = calm/low energy (< 0.0)
+        let isVulnerable = userState.valence < 0.0 && userState.arousal < 0.0
         
         guard isVulnerable else { return tracks }
         

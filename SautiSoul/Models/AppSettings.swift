@@ -39,15 +39,41 @@ class AppSettings {
     }
     
     init() {
-        self.suggestMoodShifts = UserDefaults.standard.bool(forKey: "suggestMoodShifts") ?? true
-        self.enableContextTags = UserDefaults.standard.bool(forKey: "enableContextTags") ?? false
-        self.showLyricWarnings = UserDefaults.standard.bool(forKey: "showLyricWarnings") ?? true
-        self.enableHealthKit = UserDefaults.standard.bool(forKey: "enableHealthKit") ?? false
+        // Use standard bool(forKey:) which returns false for missing keys
+        // Check if key exists to determine if we should use the stored value or default
+        if UserDefaults.standard.object(forKey: "suggestMoodShifts") != nil {
+            self.suggestMoodShifts = UserDefaults.standard.bool(forKey: "suggestMoodShifts")
+        } else {
+            self.suggestMoodShifts = true
+        }
+        
+        if UserDefaults.standard.object(forKey: "enableContextTags") != nil {
+            self.enableContextTags = UserDefaults.standard.bool(forKey: "enableContextTags")
+        } else {
+            self.enableContextTags = false
+        }
+        
+        if UserDefaults.standard.object(forKey: "showLyricWarnings") != nil {
+            self.showLyricWarnings = UserDefaults.standard.bool(forKey: "showLyricWarnings")
+        } else {
+            self.showLyricWarnings = true
+        }
+        
+        if UserDefaults.standard.object(forKey: "enableHealthKit") != nil {
+            self.enableHealthKit = UserDefaults.standard.bool(forKey: "enableHealthKit")
+        } else {
+            self.enableHealthKit = false
+        }
         
         let serviceRaw = UserDefaults.standard.string(forKey: "preferredMusicService") ?? "appleMusic"
         self.preferredMusicService = MusicServiceType(rawValue: serviceRaw) ?? .appleMusic
         
-        self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") ?? false
+        if UserDefaults.standard.object(forKey: "hasCompletedOnboarding") != nil {
+            self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+        } else {
+            self.hasCompletedOnboarding = false
+        }
+        
         self.sessionCount = UserDefaults.standard.integer(forKey: "sessionCount")
     }
     

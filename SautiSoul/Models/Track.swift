@@ -26,10 +26,21 @@ struct AudioFeatures: Codable, Hashable {
     let acousticness: Double
     let instrumentalness: Double
     
+    /// Normalizes valence from 0.0-1.0 range to -1.0-1.0 range to match Mood.valence
+    var normalizedValence: Double {
+        (valence * 2.0) - 1.0
+    }
+    
+    /// Normalizes energy from 0.0-1.0 range to -1.0-1.0 range to match Mood.arousal
+    var normalizedEnergy: Double {
+        (energy * 2.0) - 1.0
+    }
+    
     // Compute emotional distance from a mood
+    // Note: Normalizes audio features to match mood's -1.0 to 1.0 range
     func distance(to mood: Mood) -> Double {
-        let valenceDiff = valence - mood.valence
-        let energyDiff = energy - mood.arousal
+        let valenceDiff = normalizedValence - mood.valence
+        let energyDiff = normalizedEnergy - mood.arousal
         return sqrt(valenceDiff * valenceDiff + energyDiff * energyDiff)
     }
     
