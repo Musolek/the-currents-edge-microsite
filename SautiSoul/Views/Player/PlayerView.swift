@@ -7,6 +7,7 @@ struct PlayerView: View {
     @Bindable var appState: AppState
     @Bindable var settings: AppSettings
     @State private var showMenu = false
+    @State private var playbackTimer: Timer?
     
     var currentTrack: Track? {
         guard appState.currentTrackIndex < appState.currentPlaylist.count else { return nil }
@@ -216,10 +217,14 @@ struct PlayerView: View {
         .onAppear {
             startPlayback()
         }
+        .onDisappear {
+            playbackTimer?.invalidate()
+        }
     }
     
     private func startPlayback() {
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+        playbackTimer?.invalidate()
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             if appState.isPlaying {
                 appState.progress += 0.5
                 if appState.progress >= 100 {
