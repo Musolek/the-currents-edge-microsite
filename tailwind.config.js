@@ -9,6 +9,7 @@ export default {
       fontFamily: {
         'aoboshi': ['Aoboshi One', 'cursive'],
         'inter': ['Inter', 'sans-serif'],
+        'fraunces': ['Fraunces', 'serif'],
       },
     },
   },

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&display=swap');
 
 /* Paste.app inspired color palette */
 :root {
@@ -7,7 +7,7 @@
   --paste-blue: #0066FF;
   --paste-blue-light: #4D94FF;
   --paste-blue-dark: #0052CC;
-  
+
   /* Neutral grays */
   --paste-gray-50: #F8FAFC;
   --paste-gray-100: #F1F5F9;
@@ -19,18 +19,32 @@
   --paste-gray-700: #334155;
   --paste-gray-800: #1E293B;
   --paste-gray-900: #0F172A;
-  
+
   /* Accent colors */
   --paste-emerald: #10B981;
   --paste-emerald-light: #34D399;
   --paste-purple: #8B5CF6;
   --paste-purple-light: #A78BFA;
-  
+
   /* Text colors */
   --text-primary: #0F172A;
   --text-secondary: #475569;
   --text-muted: #64748B;
   --text-white: #FFFFFF;
+
+  /* --- Yambeji Chronicles: river artifact palette --- */
+  --river-bed: #070a0f;
+  --river-deep: #0a0e14;
+  --river-surface: #0e1620;
+  --river-teal: #1a6b7a;
+  --river-teal-light: #2d8a9c;
+  --ley-line: #4ecdc4;
+  --warm-sand: #c9a96e;
+  --warm-amber: #d4a847;
+  --copper: #b87333;
+  --obsidian: #14141f;
+  --warm: #e8d5b7;
+  --warm-faint: rgba(232, 213, 183, 0.55);
 }
 
 /* Clean gradient text inspired by Paste.app */
@@ -59,11 +73,11 @@
 }
 
 @keyframes subtleGlow {
-  from { 
-    text-shadow: 0 0 10px rgba(0, 102, 255, 0.2); 
+  from {
+    text-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
   }
-  to { 
-    text-shadow: 0 0 20px rgba(0, 102, 255, 0.4); 
+  to {
+    text-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
   }
 }
 
@@ -73,7 +87,7 @@
   backdrop-filter: blur(20px);
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -101,47 +115,31 @@
 .dynamic-island.expanded {
   border-radius: 20px;
   transform: scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* NotchBox-style morphing animation */
-.dynamic-island {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 .dynamic-island:hover {
   transform: scale(1.01);
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 20px rgba(0, 102, 255, 0.1);
 }
 
-/* Genie morphing effect for expansion */
 @keyframes genieMorph {
-  0% {
-    border-radius: 30px;
-    transform: scale(1);
-  }
-  50% {
-    border-radius: 25px;
-    transform: scale(1.01);
-  }
-  100% {
-    border-radius: 20px;
-    transform: scale(1.02);
-  }
+  0% { border-radius: 30px; transform: scale(1); }
+  50% { border-radius: 25px; transform: scale(1.01); }
+  100% { border-radius: 20px; transform: scale(1.02); }
 }
 
 .dynamic-island.expanding {
   animation: genieMorph 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Genie effect for play button - NotchBox style */
 .genie-button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -167,7 +165,7 @@
 
 .genie-button:hover {
   transform: scale(1.05) translateY(-1px);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(0, 102, 255, 0.3),
     0 0 20px rgba(0, 102, 255, 0.2);
 }
@@ -176,7 +174,6 @@
   transform: scale(0.98);
 }
 
-/* NotchBox-style ripple effect */
 .genie-button::after {
   content: '';
   position: absolute;
@@ -195,8 +192,6 @@
   height: 100%;
 }
 
-
-/* Subtle floating orbs with Paste.app colors */
 .floating-orbs {
   position: absolute;
   inset: 0;
@@ -218,7 +213,7 @@
   left: 2.5rem;
   width: 18rem;
   height: 18rem;
-  background: rgba(0, 102, 255, 0.08); /* Blue orb */
+  background: rgba(0, 102, 255, 0.08);
   animation-delay: 0s;
 }
 
@@ -227,22 +222,15 @@
   right: 2.5rem;
   width: 24rem;
   height: 24rem;
-  background: rgba(16, 185, 129, 0.06); /* Emerald orb */
+  background: rgba(16, 185, 129, 0.06);
   animation-delay: 4s;
 }
 
 @keyframes subtleFloat {
-  0%, 100% { 
-    transform: translateY(0px) scale(1) rotate(0deg); 
-    opacity: 0.5; 
-  }
-  50% { 
-    transform: translateY(-20px) scale(1.1) rotate(180deg); 
-    opacity: 0.7; 
-  }
+  0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); opacity: 0.5; }
+  50% { transform: translateY(-20px) scale(1.1) rotate(180deg); opacity: 0.7; }
 }
 
-/* Clean waveform bars inspired by Paste.app */
 .waveform-bar {
   width: 4px;
   background: linear-gradient(to top, var(--paste-blue), var(--paste-blue-light));
@@ -273,7 +261,6 @@
   50% { transform: scaleY(1.3); opacity: 1; }
 }
 
-/* Enhanced scroll reveal animations */
 .scroll-reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -294,15 +281,10 @@
 }
 
 @keyframes subtleColorPulse {
-  0%, 100% { 
-    filter: hue-rotate(0deg) saturate(1);
-  }
-  50% { 
-    filter: hue-rotate(5deg) saturate(1.1);
-  }
+  0%, 100% { filter: hue-rotate(0deg) saturate(1); }
+  50% { filter: hue-rotate(5deg) saturate(1.1); }
 }
 
-/* Book scroll animation */
 .book-scroll-reveal {
   opacity: 0;
   transform: translateY(50px) rotateX(15deg);
@@ -316,34 +298,20 @@
 }
 
 @keyframes bookGlow {
-  0%, 100% { 
-    box-shadow: 
-      0 10px 30px rgba(0, 102, 255, 0.2),
-      0 0 20px rgba(0, 102, 255, 0.1);
-  }
-  50% { 
-    box-shadow: 
-      0 15px 40px rgba(0, 102, 255, 0.3),
-      0 0 30px rgba(0, 102, 255, 0.2);
-  }
+  0%, 100% { box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2), 0 0 20px rgba(0, 102, 255, 0.1); }
+  50% { box-shadow: 0 15px 40px rgba(0, 102, 255, 0.3), 0 0 30px rgba(0, 102, 255, 0.2); }
 }
 
-/* Clean band styling inspired by Paste.app */
 .woven-band {
-  background: linear-gradient(45deg, 
+  background: linear-gradient(45deg,
     rgba(0, 102, 255, 0.05) 0%,
     rgba(16, 185, 129, 0.05) 50%,
     rgba(139, 92, 246, 0.05) 100%);
   border: 1px solid rgba(0, 102, 255, 0.1);
 }
 
-/* Button styles with Paste.app aesthetic */
 .button-primary {
-  background: linear-gradient(
-    135deg,
-    var(--paste-blue),
-    var(--paste-blue-light)
-  );
+  background: linear-gradient(135deg, var(--paste-blue), var(--paste-blue-light));
   color: var(--text-white);
   transition: all 0.3s ease;
   position: relative;
@@ -384,34 +352,268 @@
   border-color: var(--paste-gray-400);
 }
 
-/* Section backgrounds */
 .section-dark {
-  background: linear-gradient(
-    180deg,
-    var(--paste-gray-800) 0%,
-    var(--paste-gray-900) 100%
-  );
+  background: linear-gradient(180deg, var(--paste-gray-800) 0%, var(--paste-gray-900) 100%);
 }
 
 .section-accent {
-  background: rgba(248, 250, 252, 0.5); /* soft light overlay */
+  background: rgba(248, 250, 252, 0.5);
 }
 
-/* Clean background inspired by Paste.app */
 body {
-  background: linear-gradient(135deg, 
-    var(--paste-gray-50) 0%, 
-    var(--paste-gray-100) 50%, 
-    var(--paste-gray-50) 100%);
-  background-attachment: fixed;
+  background: var(--river-bed);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Font family definitions */
-.font-aoboshi {
-  font-family: 'Aoboshi One', serif;
+.font-aoboshi { font-family: 'Aoboshi One', serif; }
+.font-inter { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.font-fraunces { font-family: 'Fraunces', serif; }
+
+/* =========================================================
+   YAMBEJI CHRONICLES — immersive artifact layer
+   ========================================================= */
+
+.yambeji-root {
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(26, 107, 122, 0.25), transparent 60%),
+    linear-gradient(180deg, var(--river-bed) 0%, var(--river-deep) 40%, var(--obsidian) 100%);
+  color: var(--warm);
 }
 
-.font-inter {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* --- Liquid canvas hero --- */
+.river-section {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--river-bed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#liquid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(28px) contrast(28) saturate(1.4);
+  opacity: 0.85;
+}
+
+.river-section .hero-overlay {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: var(--warm);
+}
+
+.sigil-loader {
+  display: inline-block;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--ley-line);
+  animation: sigilPulse 4s infinite ease-in-out;
+}
+
+@keyframes sigilPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+.scroll-prompt {
+  margin-top: 2.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--warm-faint);
+  animation: scrollPromptFloat 2.4s ease-in-out infinite;
+}
+
+@keyframes scrollPromptFloat {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* --- Compass navigation (Zero-UI) --- */
+.compass-nav {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 50;
+  width: 92px;
+  height: 92px;
+}
+
+.compass-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(10, 14, 20, 0.65);
+  border: 1px solid rgba(78, 205, 196, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(78, 205, 196, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.compass-nav:hover .compass-ring {
+  border-color: rgba(78, 205, 196, 0.7);
+  box-shadow: 0 0 35px rgba(78, 205, 196, 0.25), inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.compass-needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 30px;
+  margin-left: -1px;
+  margin-top: -30px;
+  transform-origin: bottom center;
+  background: linear-gradient(to top, var(--ley-line), transparent);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.compass-label {
+  position: absolute;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--warm-faint);
+  cursor: pointer;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.compass-label:hover {
+  color: var(--ley-line);
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.6);
+}
+
+.compass-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: var(--ley-line);
+  box-shadow: 0 0 10px var(--ley-line);
+}
+
+/* --- Trilogy archive (stacking cards) --- */
+.trilogy-stack {
+  position: relative;
+  height: 460px;
+  perspective: 1400px;
+}
+
+.trilogy-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.55s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.trilogy-card.weathered {
+  background: linear-gradient(160deg, #8a6b42 0%, #5c4a30 55%, #3b3023 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.trilogy-card.underwater {
+  background: linear-gradient(160deg, #0f5c66 0%, #0a3b44 55%, #06262c 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.trilogy-card.obsidian {
+  background: linear-gradient(160deg, #1a1a2e 0%, #11111c 55%, #06060c 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.trilogy-card.obsidian::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 30%, rgba(78, 205, 196, 0.18) 50%, transparent 70%);
+  animation: leyLineGlow 6s ease-in-out infinite;
+}
+
+@keyframes leyLineGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* --- Sigil discovery altar --- */
+.sigil-altar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.sigil-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.sigil-tile:hover,
+.sigil-tile.active {
+  border-color: var(--ley-line);
+  transform: translateY(-4px);
+}
+
+.sigil-tile svg {
+  width: 42%;
+  height: 42%;
+  color: var(--warm-sand);
+  transition: color 0.4s ease, transform 0.6s ease;
+}
+
+.sigil-tile:hover svg,
+.sigil-tile.active svg {
+  color: var(--ley-line);
+  transform: rotate(12deg) scale(1.1);
+}
+
+.sigil-bleed {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(78, 205, 196, 0.9) 0%, rgba(78, 205, 196, 0.0) 70%);
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sigil-tile.active .sigil-bleed {
+  clip-path: circle(75% at 50% 50%);
+}
+
+/* --- Messenger from the river --- */
+.messenger-widget {
+  border: 1px solid rgba(78, 205, 196, 0.25);
+  background: linear-gradient(160deg, rgba(14, 22, 32, 0.9), rgba(7, 10, 15, 0.95));
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.messenger-widget::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, rgba(78, 205, 196, 0.12), transparent 50%);
 }
